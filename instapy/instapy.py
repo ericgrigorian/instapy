@@ -3806,47 +3806,19 @@ class InstaPy:
 
     def send_session_results_email(self):
         """ Email final session statistics """
+        subject = f'{self.username} Instagram Bot stats'
+
+        body = f'''Liked {self.liked_img} images  |  Already liked: {self.already_liked}\n
+        \t Followed {self.followed} users  |  Already followed: {self.already_followed}\n
+        \t Currently Following {self.following_num} users & have {self.followed_by} Followers\n
+        \t Unfollowed {self.unfollowed} users\n
+        \t Inappropriate images: {self.inap_img}\n
+        \t Invalid users: { self.not_valid_users}'''
+
         requests.post(
-            "https://api.mailgun.net/v3/YOUR_DOMAIN_NAME/messages",
-            auth=("api", mailgunApiKey),
+            "https://api.mailgun.net/v3/grigorian.io/messages",
+            auth=("api", "key-b4a92c4049598366fd76e0ace999cc80"),
             data={"from": "Instagram Bot <instagram_bot@grigorian.io>",
                   "to": ["grigev07@gmail.com"],
-                  "subject": self.username + "Instagram Bot stats",
-                  "text":
-                      "\t|> Liked {} images  |  Already liked: {}\n"
-                      "\t|> Followed {} users  |  Already followed: {}\n"
-                      "\t|> Unfollowed {} users\n"
-                      "\t|> Inappropriate images: {}\n"
-                      "\t|> Invalid users: {}\n"
-                      "currently Following {} users & have {} Followers\n"
-                          .format(self.liked_img,
-                                  self.already_liked,
-                                  self.followed,
-                                  self.already_followed,
-                                  self.unfollowed,
-                                  self.inap_img,
-                                  self.not_valid_users,
-                                  self.following_num,
-                                  self.followed_by)})
-
-        self.logger.info("Sessional Live Report:\n"
-                         "\t|> LIKED {} images  |  ALREADY LIKED: {}\n"
-                         "\t|> COMMENTED on {} images\n"
-                         "\t|> FOLLOWED {} users  |  ALREADY FOLLOWED: {}\n"
-                         "\t|> UNFOLLOWED {} users\n"
-                         "\t|> INAPPROPRIATE images: {}\n"
-                         "\t|> NOT VALID users: {}\n"
-                         "currently FOLLOWING {} users & has got {} FOLLOWERS\n"
-                            .format(self.liked_img,
-                                    self.already_liked,
-                                    self.commented,
-                                    self.followed,
-                                    self.already_followed,
-                                    self.unfollowed,
-                                    self.inap_img,
-                                    self.not_valid_users,
-                                    self.following_num,
-                                    self.followed_by))
-
-
-
+                  "subject": subject,
+                  "text": body})

@@ -77,7 +77,8 @@ with smart_run(session):
                                limit=3,
                                sort='top',
                                log_tags=True)
-    session.like_by_tags(use_smart_hashtags=True,
+    session.like_by_tags(amount=30,
+                         use_smart_hashtags=True,
                          interact=True)
 
     # Finally unfollow users that were followed 4 days ago
