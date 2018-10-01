@@ -64,6 +64,7 @@ from .database_engine import get_database
 
 # import exceptions
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
+mailgunApiKey = 'key-b4a92c4049598366fd76e0ace999cc80'
 
 
 
@@ -3358,6 +3359,7 @@ class InstaPy:
 
             # output live stats before leaving
             self.live_report()
+            self.send_session_results_email()
 
             message = "Session ended!"
             highlight_print(self.username, message, "end", "info", self.logger)
@@ -3783,6 +3785,50 @@ class InstaPy:
 
     def live_report(self):
         """ Report live sessional statistics """
+        self.logger.info("Sessional Live Report:\n"
+                         "\t|> LIKED {} images  |  ALREADY LIKED: {}\n"
+                         "\t|> COMMENTED on {} images\n"
+                         "\t|> FOLLOWED {} users  |  ALREADY FOLLOWED: {}\n"
+                         "\t|> UNFOLLOWED {} users\n"
+                         "\t|> INAPPROPRIATE images: {}\n"
+                         "\t|> NOT VALID users: {}\n"
+                         "currently FOLLOWING {} users & has got {} FOLLOWERS\n"
+                            .format(self.liked_img,
+                                    self.already_liked,
+                                    self.commented,
+                                    self.followed,
+                                    self.already_followed,
+                                    self.unfollowed,
+                                    self.inap_img,
+                                    self.not_valid_users,
+                                    self.following_num,
+                                    self.followed_by))
+
+    def send_session_results_email(self):
+        """ Email final session statistics """
+        requests.post(
+            "https://api.mailgun.net/v3/YOUR_DOMAIN_NAME/messages",
+            auth=("api", mailgunApiKey),
+            data={"from": "Instagram Bot <instagram_bot@grigorian.io>",
+                  "to": ["grigev07@gmail.com"],
+                  "subject": self.username + "Instagram Bot stats",
+                  "text":
+                      "\t|> Liked {} images  |  Already liked: {}\n"
+                      "\t|> Followed {} users  |  Already followed: {}\n"
+                      "\t|> Unfollowed {} users\n"
+                      "\t|> Inappropriate images: {}\n"
+                      "\t|> Invalid users: {}\n"
+                      "currently Following {} users & have {} Followers\n"
+                          .format(self.liked_img,
+                                  self.already_liked,
+                                  self.followed,
+                                  self.already_followed,
+                                  self.unfollowed,
+                                  self.inap_img,
+                                  self.not_valid_users,
+                                  self.following_num,
+                                  self.followed_by)})
+
         self.logger.info("Sessional Live Report:\n"
                          "\t|> LIKED {} images  |  ALREADY LIKED: {}\n"
                          "\t|> COMMENTED on {} images\n"
