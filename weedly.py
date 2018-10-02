@@ -2,6 +2,8 @@
 # imports
 from instapy import InstaPy
 from instapy.util import smart_run
+import schedule
+import time
 import datetime
 
 # Used for follow calculation
@@ -29,61 +31,70 @@ peak_hourly_follows = int(peak_daily_follows / 8)
 peak_daily_likes = int(peak_daily_follows * 1.5)
 peak_hourly_likes = int(peak_daily_likes / 8)
 
-# get an InstaPy session!
-# set headless_browser=True to run InstaPy in the background
-session = InstaPy(username=insta_username,
-                  password=insta_password,
-                  headless_browser=True,
-                  multi_logs=True,
-                  disable_image_load=True,
-                  bypass_suspicious_attempt=True)
 
-with smart_run(session):
-    """ Activity flow """
-    print('Peak daily follows: ' + str(peak_daily_follows))
-    print('Peak hourly follows: ' + str(peak_hourly_follows))
-    print('Peak daily likes: ' + str(peak_daily_likes))
-    print('Peak hourly likes: ' + str(peak_hourly_likes))
+def job():
+    # get an InstaPy session!
+    # set headless_browser=True to run InstaPy in the background
+    session = InstaPy(username=insta_username,
+                      password=insta_password,
+                      headless_browser=True,
+                      multi_logs=True,
+                      disable_image_load=True,
+                      bypass_suspicious_attempt=True)
 
-    # settings
-    session.set_quota_supervisor(enabled=True,
-                                 sleep_after=["likes", "follows", "unfollows", "server_calls_d"],
-                                 sleepyhead=True,
-                                 stochastic_flow=True,
-                                 peak_likes=(peak_hourly_likes, peak_daily_likes),
-                                 peak_follows=(peak_hourly_follows, None),
-                                 peak_unfollows=(32, 402),
-                                 peak_server_calls=(None, 4700))
-    session.set_relationship_bounds(enabled=True,
-                                    potency_ratio=-1.1,
-                                    delimit_by_numbers=True,
-                                    max_followers=5050,
-                                    max_following=5555,
-                                    min_followers=35,
-                                    min_following=40)
-    session.set_delimit_liking(enabled=True,
-                               max=250,
-                               min=None)
+    with smart_run(session):
+        """ Activity flow """
+        print('Peak daily follows: ' + str(peak_daily_follows))
+        print('Peak hourly follows: ' + str(peak_hourly_follows))
+        print('Peak daily likes: ' + str(peak_daily_likes))
+        print('Peak hourly likes: ' + str(peak_hourly_likes))
 
-    # actions
-    session.set_user_interact(amount=3,
-                              randomize=True,
+        # settings
+        session.set_quota_supervisor(enabled=True,
+                                     sleep_after=["likes", "follows", "unfollows", "server_calls_d"],
+                                     sleepyhead=True,
+                                     stochastic_flow=True,
+                                     peak_likes=(peak_hourly_likes, peak_daily_likes),
+                                     peak_follows=(peak_hourly_follows, None),
+                                     peak_unfollows=(32, 402),
+                                     peak_server_calls=(None, 4700))
+        session.set_relationship_bounds(enabled=True,
+                                        potency_ratio=-1.1,
+                                        delimit_by_numbers=True,
+                                        max_followers=5050,
+                                        max_following=5555,
+                                        min_followers=35,
+                                        min_following=40)
+        session.set_delimit_liking(enabled=True,
+                                   max=250,
+                                   min=None)
+
+        # actions
+        session.set_user_interact(amount=3,
+                                  randomize=True,
+                                  percentage=100,
+                                  media='Photo')
+        session.set_do_follow(enabled=True,
                               percentage=100,
-                              media='Photo')
-    session.set_do_follow(enabled=True,
-                          percentage=100,
-                          times=2)
-    session.set_smart_hashtags(hastags,
-                               limit=3,
-                               sort='top',
-                               log_tags=True)
-    session.like_by_tags(amount=30,
-                         use_smart_hashtags=True,
-                         interact=True)
+                              times=2)
+        session.set_smart_hashtags(hastags,
+                                   limit=3,
+                                   sort='top',
+                                   log_tags=True)
+        session.like_by_tags(amount=30,
+                             use_smart_hashtags=True,
+                             interact=True)
 
-    # Finally unfollow users that were followed 4 days ago
-    session.unfollow_users(amount=100,
-                           InstapyFollowed=(True, "all"),
-                           style="FIFO",
-                           unfollow_after=4 * 24 * 60 * 60,
-                           sleep_delay=600)
+        # Finally unfollow users that were followed 4 days ago
+        session.unfollow_users(amount=100,
+                               InstapyFollowed=(True, "all"),
+                               style="FIFO",
+                               unfollow_after=4 * 24 * 60 * 60,
+                               sleep_delay=600)
+
+
+schedule.every().day.at('8:00').do(job)
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)
