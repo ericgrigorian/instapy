@@ -93,8 +93,10 @@ def job():
                                sleep_delay=600)
 
 
-schedule.every().day.at('8:00').do(job)
+job()
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+# schedule.every().day.at('8:00').do(job)
+#
+# while True:
+#     schedule.run_pending()
+#     time.sleep(1)
