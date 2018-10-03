@@ -26,10 +26,10 @@ peak_daily_follows = 300
 if year == 2018 and (day_of_year - start_day_of_year) * follow_multiplier + peak_daily_follows <= 500:
     peak_daily_follows += (day_of_year - start_day_of_year) * follow_multiplier
 
-peak_hourly_follows = int(peak_daily_follows / 8)
+peak_hourly_follows = int(peak_daily_follows / 16)
 
-peak_daily_likes = int(peak_daily_follows * 1.5)
-peak_hourly_likes = int(peak_daily_likes / 8)
+peak_daily_likes = int(peak_daily_follows * 4)
+peak_hourly_likes = int(peak_daily_likes / 16)
 
 
 def job():
@@ -54,12 +54,12 @@ def job():
                                      sleep_after=["likes", "follows", "unfollows", "server_calls_d"],
                                      sleepyhead=True,
                                      stochastic_flow=True,
-                                     peak_likes=(peak_hourly_likes, peak_daily_likes),
-                                     peak_follows=(peak_hourly_follows, None),
-                                     peak_unfollows=(32, 402),
+                                     peak_likes=(peak_hourly_likes, None),
+                                     peak_follows=(peak_hourly_follows, peak_daily_follows),
+                                     peak_unfollows=(None, peak_daily_follows),
                                      peak_server_calls=(None, 4700))
         session.set_relationship_bounds(enabled=True,
-                                        potency_ratio=-1.1,
+                                        potency_ratio=-1.2,
                                         delimit_by_numbers=True,
                                         max_followers=5050,
                                         max_following=5555,
@@ -67,7 +67,7 @@ def job():
                                         min_following=40)
         session.set_delimit_liking(enabled=True,
                                    max=250,
-                                   min=None)
+                                   min=1)
 
         # actions
         session.set_user_interact(amount=3,
@@ -86,7 +86,7 @@ def job():
                              interact=True)
 
         # Finally unfollow users that were followed 4 days ago
-        session.unfollow_users(amount=100,
+        session.unfollow_users(amount=int(peak_daily_follows/10),
                                InstapyFollowed=(True, "all"),
                                style="FIFO",
                                unfollow_after=4 * 24 * 60 * 60,
