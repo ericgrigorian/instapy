@@ -294,10 +294,10 @@ class InstaPy:
             if self.headless_browser:
                 chrome_options.add_argument('--headless')
                 chrome_options.add_argument('--no-sandbox')
-                
+
                 if self.disable_image_load:
                     chrome_options.add_argument('--blink-settings=imagesEnabled=false')
-                
+
                 # Replaces browser User Agent from "HeadlessChrome".
                 user_agent = "Chrome"
                 chrome_options.add_argument('user-agent={user_agent}'
@@ -323,10 +323,10 @@ class InstaPy:
             chrome_prefs = {
                 'intl.accept_languages': 'en-US'
             }
-            
+
             if self.disable_image_load:
                 chrome_prefs['profile.managed_default_content_settings.images'] = 2
-            
+
             chrome_options.add_experimental_option('prefs', chrome_prefs)
             try:
                 self.browser = webdriver.Chrome(chromedriver_location,
@@ -3359,7 +3359,6 @@ class InstaPy:
 
             # output live stats before leaving
             self.live_report()
-            self.send_session_results_email()
 
             message = "Session ended!"
             highlight_print(self.username, message, "end", "info", self.logger)
