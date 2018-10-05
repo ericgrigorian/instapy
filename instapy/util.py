@@ -409,8 +409,8 @@ def get_active_users(browser, username, posts, boundary, logger):
             except WebDriverException:
                 try:
                     likers_count = (browser.find_element_by_xpath(
-                        "//a[contains(@class, 'zV_Nj')]/span").text)
-                    if likers_count:  ##prevent an empty string scenarios
+                         "//button[contains(@class, '_8A5w5')]/span").text)
+                    if likers_count: ##prevent an empty string scenarios
                         likers_count = format_number(likers_count)
                     else:
                         logger.info("Failed to get likers count on your post {}  ~empty string".format(count))
@@ -419,8 +419,9 @@ def get_active_users(browser, username, posts, boundary, logger):
                     logger.info("Failed to get likers count on your post {}".format(count))
                     likers_count = None
 
-            likes_button = browser.find_element_by_xpath(
-                "//a[contains(@class, 'zV_Nj')]")
+            likes_button = browser.find_elements_by_xpath(
+                "//button[contains(@class, '_8A5w5')]")[1]
+
             click_element(browser, likes_button)
             sleep_actual(5)
 
@@ -731,7 +732,7 @@ def get_relationship_counts(browser, username, logger):
                         followers_count = None
 
                 except NoSuchElementException:
-                    logger.error("Error occured during getting the followers count of '{}'\n".format(username))
+                    logger.error("Error occurred during getting the followers count of '{}'\n".format(username))
                     followers_count = None
 
     try:
@@ -766,7 +767,7 @@ def get_relationship_counts(browser, username, logger):
                         following_count = None
 
                 except NoSuchElementException:
-                    logger.error("\nError occured during getting the following count of '{}'\n".format(username))
+                    logger.error("\nError occurred during getting the following count of '{}'\n".format(username))
                     following_count = None
 
     return followers_count, following_count
@@ -932,7 +933,7 @@ def dump_record_activity(profile_name, logger, logfolder):
                 json.dump(current_data, recordActFile)
 
     except Exception as exc:
-        logger.error("Pow! Error occured while dumping record activity data to a local JSON:\n\t{}".format(
+        logger.error("Pow! Error occurred while dumping record activity data to a local JSON:\n\t{}".format(
             str(exc).encode("utf-8")))
 
     finally:
