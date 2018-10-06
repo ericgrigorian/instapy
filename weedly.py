@@ -15,7 +15,7 @@ year = datetime.datetime.now().timetuple().tm_year
 insta_username = 'weedlyshop'
 insta_password = 'Hayastan7'
 
-hastags = ['stonedsociety', 'weedhead', 'kushsociety', 'kushlife', 'reefersdaily', 'marijuanamovement', 'weedlife',
+hashtags = ['stonedsociety', 'weedhead', 'kushsociety', 'kushlife', 'reefersdaily', 'marijuanamovement', 'weedlife',
            'kusharmy', 'kush', 'weedporn', 'marijuanagram', 'stonedtothebone', 'stoned', 'weedly', 'tobacco',
            'smokingweed', 'reefer', 'weed', 'marijuana', 'pipe']
 targeted_hashtags = ['marijuana', 'weedporn', 'stoned', 'marijuanamovement', 'weedlife', 'kushlife', 'pipe',
@@ -59,7 +59,7 @@ def job():
                                      peak_unfollows=(None, peak_daily_follows),
                                      peak_server_calls=(None, 4700))
         session.set_relationship_bounds(enabled=True,
-                                        potency_ratio=-1.2,
+                                        potency_ratio=-1.1,
                                         delimit_by_numbers=True,
                                         max_followers=5050,
                                         max_following=5555,
@@ -77,16 +77,16 @@ def job():
         session.set_do_follow(enabled=True,
                               percentage=100,
                               times=2)
-        session.set_smart_hashtags(hastags,
-                                   limit=3,
-                                   sort='top',
+        session.set_smart_hashtags(hashtags,
+                                   limit=10,
+                                   sort='random',
                                    log_tags=True)
         session.like_by_tags(amount=30,
                              use_smart_hashtags=True,
                              interact=True)
 
         # Finally unfollow users that were followed 4 days ago
-        session.unfollow_users(amount=int(peak_daily_follows/10),
+        session.unfollow_users(amount=int(peak_daily_follows),
                                InstapyFollowed=(True, "all"),
                                style="FIFO",
                                unfollow_after=4 * 24 * 60 * 60,
