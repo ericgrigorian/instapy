@@ -79,7 +79,7 @@ def job():
                               times=2)
         session.set_smart_hashtags(hashtags,
                                    limit=5,
-                                   sort='random',
+                                   sort='top',
                                    log_tags=True)
         session.like_by_tags(amount=30,
                              use_smart_hashtags=True,
