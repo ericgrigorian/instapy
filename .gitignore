@@ -98,7 +98,7 @@ ENV/
 
 # Storage
 instapy.db
-logs/
+# logs/
 
 # Editors
 .idea
