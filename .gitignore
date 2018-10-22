@@ -107,3 +107,7 @@ instapy.db
 # pytest
 .pytest_cache/
 tests/logs
+
+# Pipfile
+Pipfile
+Pipfile.lock
