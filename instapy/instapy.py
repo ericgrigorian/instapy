@@ -3689,22 +3689,3 @@ class InstaPy:
                                  self.not_valid_users,
                                  self.following_num,
                                  self.followed_by))
-
-    def send_session_results_email(self):
-        """ Email final session statistics """
-        subject = f'{self.username} Instagram Bot stats'
-
-        body = f'''Liked {self.liked_img} images  |  Already liked: {self.already_liked}\n
-        \t Followed {self.followed} users  |  Already followed: {self.already_followed}\n
-        \t Currently Following {self.following_num} users & have {self.followed_by} Followers\n
-        \t Unfollowed {self.unfollowed} users\n
-        \t Inappropriate images: {self.inap_img}\n
-        \t Invalid users: { self.not_valid_users}'''
-
-        requests.post(
-            "https://api.mailgun.net/v3/grigorian.io/messages",
-            auth=("api", "key-b4a92c4049598366fd76e0ace999cc80"),
-            data={"from": "Instagram Bot <instagram_bot@grigorian.io>",
-                  "to": ["grigev07@gmail.com"],
-                  "subject": subject,
-                  "text": body})

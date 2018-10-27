@@ -13,14 +13,15 @@ import time
 # day_of_year = datetime.datetime.now().timetuple().tm_yday
 # year = datetime.datetime.now().timetuple().tm_year
 
-insta_username = 'weedlyshop'
+insta_username = '_ericgrigorian'
 insta_password = 'Hayastan7'
 
-hashtags = ['stonedsociety', 'weedhead', 'kushsociety', 'kushlife', 'reefersdaily', 'marijuanamovement', 'weedlife',
-           'kusharmy', 'kush', 'weedporn', 'marijuanagram', 'stonedtothebone', 'stoned', 'weedly', 'tobacco',
-           'smokingweed', 'reefer', 'weed', 'marijuana', 'pipe']
-targeted_hashtags = ['marijuana', 'weedporn', 'stoned', 'marijuanamovement', 'weedlife', 'kushlife', 'pipe',
-                     'smokingweed', 'marijuanagram', 'tobacco', 'kusharmy', 'reefer']
+hashtags = ['travel', 'Travelgram', 'traveling', 'Travelphotography', 'travelling', 'travelblogger', 'traveler',
+            'traveller', 'travelingram', 'traveltheworld', 'travelblog', 'travels', 'traveladdict', 'travellife',
+            'travelphoto', 'entrepreneur', 'entrepreneurship', 'Entrepreneurs', 'Entrepreneurlife',
+            'entrepreneurlifestyle', 'entrepreneurmindset', 'EntrepreneurQuotes', 'entrepreneurial',
+            'entrepreneursofinstagram', 'entrepreneurslife', 'entrepreneurmotivation', 'entrepreneurialmindset',
+            'entrepreneurstyle', 'entrepreneurmind', 'entrepreneurgoals']
 
 peak_daily_follows = 500
 peak_hourly_follows = 31
@@ -44,8 +45,7 @@ def job():
                       password=insta_password,
                       headless_browser=True,
                       multi_logs=True,
-                      disable_image_load=True,
-                      bypass_suspicious_attempt=True)
+                      disable_image_load=True)
 
     with smart_run(session):
         """ Activity flow """
@@ -68,8 +68,13 @@ def job():
                                         delimit_by_numbers=True,
                                         max_followers=5050,
                                         max_following=5555,
-                                        min_followers=35,
-                                        min_following=40)
+                                        min_followers=None,
+                                        min_following=None)
+        session.set_skip_users(skip_private=True,
+                               private_percentage=100,
+                               skip_no_profile_pic=True,
+                               no_profile_pic_percentage=100,
+                               skip_business=True)
         session.set_delimit_liking(enabled=True,
                                    max=250,
                                    min=1)
@@ -83,7 +88,7 @@ def job():
                               percentage=100,
                               times=2)
         session.set_smart_hashtags(hashtags,
-                                   limit=5,
+                                   limit=3,
                                    sort='top',
                                    log_tags=True)
         session.like_by_tags(amount=30,
