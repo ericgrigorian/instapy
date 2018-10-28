@@ -88,7 +88,7 @@ def job():
                               percentage=100,
                               times=2)
         session.set_smart_hashtags(hashtags,
-                                   limit=3,
+                                   limit=5,
                                    sort='top',
                                    log_tags=True)
         session.like_by_tags(amount=30,
