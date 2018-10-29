@@ -4,6 +4,8 @@ from instapy.util import smart_run
 import schedule
 import time
 
+import random
+
 # To use for a new account, import datetime and set start day of
 # year to current day to warm up account until 500 daily followers
 # -------------------------
@@ -80,7 +82,7 @@ def job():
                                    min=1)
 
         # actions
-        session.set_user_interact(amount=3,
+        session.set_user_interact(amount=2,
                                   randomize=True,
                                   percentage=100,
                                   media='Photo')
@@ -88,10 +90,10 @@ def job():
                               percentage=100,
                               times=2)
         session.set_smart_hashtags(hashtags,
-                                   limit=5,
+                                   limit=10,
                                    sort='top',
                                    log_tags=True)
-        session.like_by_tags(amount=30,
+        session.like_by_tags(amount=random.randint(50, 100),
                              use_smart_hashtags=True,
                              interact=True)
 
