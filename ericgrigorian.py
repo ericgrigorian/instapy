@@ -25,6 +25,9 @@ hashtags = ['travel', 'Travelgram', 'traveling', 'Travelphotography', 'travellin
             'entrepreneursofinstagram', 'entrepreneurslife', 'entrepreneurmotivation', 'entrepreneurialmindset',
             'entrepreneurstyle', 'entrepreneurmind', 'entrepreneurgoals']
 
+dont_like_hastags = ['suicidal', 'suicide', 'depression', 'depressed', 'cutting', 'sad', 'crying', 'hurt', 'pain',
+                     'forex', 'crypto', 'binary', 'turkish', 'bitcoin']
+
 peak_daily_follows = 500
 peak_hourly_follows = 31
 
@@ -80,6 +83,7 @@ def job():
         session.set_delimit_liking(enabled=True,
                                    max=250,
                                    min=1)
+        session.set_dont_like(dont_like_hastags)
 
         # actions
         session.set_user_interact(amount=2,
