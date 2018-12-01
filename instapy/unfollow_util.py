@@ -18,7 +18,6 @@ from .util import web_address_navigator
 from .util import get_relationship_counts
 from .util import emergency_exit
 from .util import load_user_id
-from .util import get_username
 from .util import find_user_id
 from .util import explicit_wait
 from .util import get_username_from_id
@@ -26,6 +25,7 @@ from .util import is_page_available
 from .util import reload_webpage
 from .util import click_visibly
 from .util import get_action_delay
+from .util import truncate_float
 from .print_log_writer import log_followed_pool
 from .print_log_writer import log_uncertain_unfollowed_pool
 from .print_log_writer import log_record_all_unfollowed
@@ -36,7 +36,6 @@ from .quota_supervisor import quota_supervisor
 
 from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import ElementNotVisibleException
 
 
@@ -115,7 +114,7 @@ def get_following_status(browser, track, username, person, person_id, logger, lo
                         )
     failure_msg = "--> Unable to detect the following status of '{}'!"
     user_inaccessible_msg = ("Couldn't access the profile page of '{}'!"
-                             "\t~might have changed the username".format(username))
+                             "\t~might have changed the username".format(person))
 
     # check if the page is available
     valid_page = is_page_available(browser, logger)
@@ -326,7 +325,7 @@ def unfollow(browser,
                     delay_random = random.randint(ceil(sleep_delay*0.85), ceil(sleep_delay*1.14))
                     logger.info("Unfollowed {} new users  ~sleeping about {}\n".format(sleep_counter,
                                     '{} seconds'.format(delay_random) if delay_random < 60 else
-                                    '{} minutes'.format(float("{0:.2f}".format(delay_random/60)))))
+                                    '{} minutes'.format(truncate_float(delay_random/60, 2))))
                     sleep(delay_random)
                     sleep_counter = 0
                     sleep_after = random.randint(8, 12)
@@ -402,7 +401,7 @@ def unfollow(browser,
 
         # find dialog box
         dialog = browser.find_element_by_xpath(
-            "//div[text()='Following']/../../following-sibling::div")
+            "//div[text()='Following']/../../../following-sibling::div")
 
         sleep(3)
 
@@ -646,9 +645,8 @@ def get_users_through_dialog(browser,
         amount = int(users_count*0.85)
     try_again = 0
     sc_rolled = 0
-
     # find dialog box
-    dialog_address = "//div[text()='Followers' or text()='Following']/../../following-sibling::div"
+    dialog_address = "//div[3]/div/div/div[2]"
     dialog = browser.find_element_by_xpath(dialog_address)
 
     # scroll to end of follower list to initiate first load which hides the suggestions
@@ -1219,7 +1217,7 @@ def get_user_id(browser, track, username, logger):
     """ Get user's ID either from a profile page or post page """
     user_id = "unknown"
 
-    if track != "dialog":   # currently do not get the user ID for follows from 'dialog' 
+    if track != "dialog":   # currently do not get the user ID for follows from 'dialog'
         user_id = find_user_id(browser, track, username, logger)
 
     return user_id
@@ -1282,6 +1280,7 @@ def verify_action(browser, action, track, username, person, person_id, logger, l
             else:
                 action_state = None
 
+
             # handle it!
             if action_state == True:
                 logger.info("Last {} is verified after reloading the page!".format(action))
@@ -1307,6 +1306,3 @@ def verify_action(browser, action, track, username, person, person_id, logger, l
                 return False, "unexpected"
 
     return True, "success"
-
-
-
