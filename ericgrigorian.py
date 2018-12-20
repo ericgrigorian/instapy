@@ -43,7 +43,7 @@ peak_hourly_likes = 125
 # peak_hourly_likes = int(peak_daily_likes / 16)
 
 
-def job():
+def full():
     # get an InstaPy session!
     # set headless_browser=True to run InstaPy in the background
     session = InstaPy(username=insta_username,
@@ -109,9 +109,44 @@ def job():
                                sleep_delay=600)
 
 
+def unfollow():
+    # get an InstaPy session!
+    # set headless_browser=True to run InstaPy in the background
+    session = InstaPy(username=insta_username,
+                      password=insta_password,
+                      headless_browser=True,
+                      multi_logs=True,
+                      disable_image_load=True)
+
+    with smart_run(session):
+        """ Activity flow """
+        print('Peak daily follows: ' + str(peak_daily_follows))
+        print('Peak hourly follows: ' + str(peak_hourly_follows))
+        print('Peak daily likes: ' + str(peak_daily_likes))
+        print('Peak hourly likes: ' + str(peak_hourly_likes))
+
+        # settings
+        session.set_quota_supervisor(enabled=True,
+                                     sleep_after=["likes", "follows", "unfollows", "server_calls_d"],
+                                     sleepyhead=True,
+                                     stochastic_flow=True,
+                                     peak_likes=(peak_hourly_likes, None),
+                                     peak_follows=(peak_hourly_follows, peak_daily_follows),
+                                     peak_unfollows=(None, peak_daily_follows),
+                                     peak_server_calls=(None, 4900))
+
+        # Unfollow users that were followed 4 days ago
+        session.unfollow_users(amount=int(peak_daily_follows),
+                               InstapyFollowed=(True, "all"),
+                               style="FIFO",
+                               unfollow_after=4 * 24 * 60 * 60,
+                               sleep_delay=600)
+
+
 # job()
 
-schedule.every().day.at('8:00').do(job)
+# schedule.every().day.at('8:00').do(full)
+schedule.every().day.at('8:00').do(unfollow)
 
 while True:
     schedule.run_pending()
