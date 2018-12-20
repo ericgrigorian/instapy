@@ -146,7 +146,7 @@ def unfollow():
 # job()
 
 # schedule.every().day.at('8:00').do(full)
-schedule.every().day.at('8:00').do(unfollow)
+schedule.every().day.at('22:33').do(unfollow)
 
 while True:
     schedule.run_pending()
