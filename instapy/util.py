@@ -14,7 +14,7 @@ import csv
 import sqlite3
 import json
 from contextlib import contextmanager
-import requests
+
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
@@ -456,12 +456,15 @@ def get_active_users(browser, username, posts, boundary, logger):
                 except NoSuchElementException:
                     logger.info("Failed to get likers count on your post {}".format(count))
                     likers_count = None
+            try:
+                likes_button = browser.find_elements_by_xpath(
+                    "//button[contains(@class, '_8A5w5')]")[1]
+                click_element(browser, likes_button)
+                sleep_actual(5)
+            except (IndexError, NoSuchElementException):
+                # Video have no likes button / no posts in page
+                continue
 
-            likes_button = browser.find_elements_by_xpath(
-                "//button[contains(@class, '_8A5w5')]")[1]
-
-            click_element(browser, likes_button)
-            sleep_actual(5)
 
             dialog = browser.find_element_by_xpath(
                 "//div[text()='Likes']/following-sibling::div")
@@ -824,7 +827,7 @@ def get_relationship_counts(browser, username, logger):
                         logger.info("Failed to get following count of '{}'  ~empty list".format(username.encode("utf-8")))
                         following_count = None
 
-                except NoSuchElementException:
+                except (NoSuchElementException, IndexError) as e:
                     logger.error("\nError occurred during getting the following count of '{}'\n".format(username.encode("utf-8")))
                     following_count = None
 
@@ -869,18 +872,20 @@ def web_address_navigator(browser, link):
 
 
 @contextmanager
-def interruption_handler(SIG_type=signal.SIGINT, handler=signal.SIG_IGN, notify=None, logger=None):
+def interruption_handler(threaded=False, SIG_type=signal.SIGINT, handler=signal.SIG_IGN, notify=None, logger=None):
     """ Handles external interrupt, usually initiated by the user like KeyboardInterrupt with CTRL+C """
     if notify is not None and logger is not None:
         logger.warning(notify)
 
-    original_handler = signal.signal(SIG_type, handler)
+    if not threaded:
+        original_handler = signal.signal(SIG_type, handler)
 
     try:
         yield
 
     finally:
-        signal.signal(SIG_type, original_handler)
+        if not threaded:
+            signal.signal(SIG_type, original_handler)
 
 
 def highlight_print(username=None, message=None, priority=None, level=None, logger=None):
@@ -926,7 +931,7 @@ def highlight_print(username=None, message=None, priority=None, level=None, logg
 
 
     if show_logs == True:
-        print("\n{}".format(upper_char * ceil(output_len/len(upper_char))))
+        print("\n{}".format(upper_char * int(ceil(output_len/len(upper_char)))))
 
     if level == "info":
         logger.info(message)
@@ -1356,16 +1361,17 @@ def get_username_from_id(browser, user_id, logger):
         logger.info("No profile found, the user may have blocked you (ID: {})".format(user_id))
         return None
 
-    # method using private API
-    logger.info("Trying to find the username from the given user ID by a quick API call")
+    """  method using private API
+    #logger.info("Trying to find the username from the given user ID by a quick API call")
 
-    req = requests.get(u"https://i.instagram.com/api/v1/users/{}/info/"
-                       .format(user_id))
-    if req:
-        data = json.loads(req.text)
-        if data["user"]:
-            username = data["user"]["username"]
-            return username
+    #req = requests.get(u"https://i.instagram.com/api/v1/users/{}/info/"
+    #                   .format(user_id))
+    #if req:
+    #    data = json.loads(req.text)
+    #    if data["user"]:
+    #        username = data["user"]["username"]
+    #        return username
+    """
 
     """ Having a BUG (random log-outs) with the method below, use it only in the external sessions
     # method using graphql 'Follow' endpoint
@@ -1637,4 +1643,33 @@ def has_any_letters(text):
     return result
 
 
+def save_account_progress(browser, username, logger):
+    """
+    Check account current progress and update database
 
+    Args:
+        :browser: web driver
+        :username: Account to be updated
+        :logger: library to log actions
+    """
+    logger.info('Saving account progress...')
+    followers, following = get_relationship_counts (browser, username, logger)
+    
+    # save profile total posts
+    posts = getUserData("graphql.user.edge_owner_to_timeline_media.count", browser)
+
+    try:
+        # DB instance
+        db, id = get_database()
+        conn = sqlite3.connect(db)
+        with conn:
+            conn.row_factory = sqlite3.Row
+            cur = conn.cursor()
+            sql = ("INSERT INTO accountsProgress (profile_id, followers, "
+                   "following, total_posts, created, modified) "
+                   "VALUES (?, ?, ?, ?, strftime('%Y-%m-%d %H:%M:%S'), "
+                   "strftime('%Y-%m-%d %H:%M:%S'))")
+            cur.execute(sql, (id, followers, following, posts))
+            conn.commit()
+    except Exception:
+        logger.exception('message')
