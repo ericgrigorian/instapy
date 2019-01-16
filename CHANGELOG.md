@@ -3,24 +3,37 @@ The **goal** of this file is explaining to the users of our project the notable 
 
 _The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)_.
 
-## [Unreleased] - 2018-11-26
-### Changed
-- Switch mandatory_words from ALL to ANY
-
-## [Unreleased] - 2018-11-22
+## [Unreleased] - 2019-01-15
 ### Fixed
-- "Added location to image_text in the check_link method in like_util.py, so the script also searches for mandatory words in the location information.
+- Handle A/B-Test for comments (graphql edge)
 
-## [Unreleased] - 2018-11-17
+## [Unreleased] - 2019-01-13
+### Fixed 
+- Adjust docker-compose.yml according to new Dockerfile
+
+## [Unreleased] - 2019-01-11
 ### Fixed
-- "Cookie file not found, creating cookie..." bug fix
+- Correctly mount Docker volume, make it work properly with chromedriver installed in assets folder
 
-## [Unreleased] - 2018-11-07
+## [Unreleased] - 2019-01-10
+### Added 
+- Feature to remove outgoing unapproved follow requests from private accounts
+
+## [Unreleased] - 2019-01-05
 ### Changed
-- Maintain names: 'person' for target user and 'username' for our running user
-- Verify private users in get_links_for_username
-- Changed behaviour of validate_username to check if a user is included in the blacklist. If yes will skip it and log why.
+- Resolve security warning with new pyyaml version, updated pyyaml to version 4.2b1
 
+## [Unreleased] - 2019-01-04
+### Fixed
+- Fix for non-authenticated proxies in chrome headless browser
+
+## [Unreleased] - 2019-01-02
+### Fixed
+-  User without timestamp will use the timestamp of previous user
+
+## [Unreleased] - 2019-01-01
+### Changed
+- PEP8 layout changes
 
 ## [Unreleased] - 2018-12-17
 ### Added
