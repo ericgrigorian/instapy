@@ -18,6 +18,8 @@ import random
 insta_username = 'weedlyshop'
 insta_password = 'Hayastan7'
 
+hashtag_categories = ['weed', 'reefer', 'weedporn', 'joint', 'kusharmy']
+
 hashtags = ['stonedsociety', 'weedhead', 'kushsociety', 'kushlife', 'reefersdaily', 'marijuanamovement', 'weedlife',
            'kusharmy', 'kush', 'weedporn', 'marijuanagram', 'stonedtothebone', 'stoned', 'weedly', 'tobacco',
            'smokingweed', 'reefer', 'weed', 'marijuana', 'pipe']
@@ -80,12 +82,12 @@ def job():
         session.set_user_interact(amount=2,
                                   randomize=True,
                                   percentage=100,
-                                  media='Photo')
+                                  media=None)
         session.set_do_follow(enabled=True,
                               percentage=100,
                               times=2)
         session.set_smart_hashtags(hashtags,
-                                   limit=10,
+                                   limit=6,
                                    sort='top',
                                    log_tags=True)
         session.like_by_tags(amount=random.randint(50, 100),
@@ -96,7 +98,7 @@ def job():
         session.unfollow_users(amount=int(peak_daily_follows),
                                InstapyFollowed=(True, "all"),
                                style="FIFO",
-                               unfollow_after=4 * 24 * 60 * 60,
+                               unfollow_after=3 * 24 * 60 * 60,
                                sleep_delay=600)
 
 

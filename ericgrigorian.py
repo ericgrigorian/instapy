@@ -18,15 +18,10 @@ import random
 insta_username = '_ericgrigorian'
 insta_password = 'Hayastan7'
 
-hashtags = ['travel', 'Travelgram', 'traveling', 'Travelphotography', 'travelling', 'travelblogger', 'traveler',
-            'traveller', 'travelingram', 'traveltheworld', 'travelblog', 'travels', 'traveladdict', 'travellife',
-            'travelphoto', 'entrepreneur', 'entrepreneurship', 'Entrepreneurs', 'Entrepreneurlife',
-            'entrepreneurlifestyle', 'entrepreneurmindset', 'EntrepreneurQuotes', 'entrepreneurial',
-            'entrepreneursofinstagram', 'entrepreneurslife', 'entrepreneurmotivation', 'entrepreneurialmindset',
-            'entrepreneurstyle', 'entrepreneurmind', 'entrepreneurgoals']
+hashtag_categories = ['travel', 'entrepreneur', 'boston', 'armenian', 'software']
 
 dont_like_hastags = ['suicidal', 'suicide', 'depression', 'depressed', 'cutting', 'sad', 'crying', 'hurt', 'pain',
-                     'forex', 'crypto', 'binary', 'turkish', 'bitcoin']
+                     'forex', 'crypto', 'binary', 'turkish', 'bitcoin', 'hustle']
 
 peak_daily_follows = 500
 peak_hourly_follows = 31
@@ -89,12 +84,12 @@ def full():
         session.set_user_interact(amount=2,
                                   randomize=True,
                                   percentage=100,
-                                  media='Photo')
+                                  media=None)
         session.set_do_follow(enabled=True,
                               percentage=100,
                               times=2)
-        session.set_smart_hashtags(hashtags,
-                                   limit=10,
+        session.set_smart_hashtags(hashtag_categories,
+                                   limit=6,
                                    sort='top',
                                    log_tags=True)
         session.like_by_tags(amount=random.randint(50, 100),
@@ -105,7 +100,7 @@ def full():
         session.unfollow_users(amount=int(peak_daily_follows),
                                InstapyFollowed=(True, "all"),
                                style="FIFO",
-                               unfollow_after=4 * 24 * 60 * 60,
+                               unfollow_after=3 * 24 * 60 * 60,
                                sleep_delay=600)
 
 
@@ -143,12 +138,12 @@ def unfollow():
                                sleep_delay=600)
 
 
-# job()
-unfollow()
+# full()
+# unfollow()
 
-# schedule.every().day.at('8:00').do(full)
+schedule.every().day.at('8:00').do(full)
 # schedule.every().day.at('22:33').do(unfollow)
 
-# while True:
-#     schedule.run_pending()
-#     time.sleep(1)
+while True:
+    schedule.run_pending()
+    time.sleep(1)
