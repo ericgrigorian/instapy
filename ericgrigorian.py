@@ -42,7 +42,7 @@ peak_hourly_likes = 125
 def full():
     # get an InstaPy session!
     # set headless_browser=True to run InstaPy in the background
-    set_workspace("/root/Eric_InstaPy/")
+    set_workspace("/root/InstaPy/")
 
     session = InstaPy(username=insta_username,
                       password=insta_password,
