@@ -1,6 +1,7 @@
 # imports
 from instapy import InstaPy
 from instapy.util import smart_run
+from instapy import set_workspace
 import schedule
 import time
 
@@ -41,6 +42,8 @@ peak_hourly_likes = 125
 def full():
     # get an InstaPy session!
     # set headless_browser=True to run InstaPy in the background
+    set_workspace("/root/InstaPyEric")
+
     session = InstaPy(username=insta_username,
                       password=insta_password,
                       headless_browser=True,
