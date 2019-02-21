@@ -92,7 +92,7 @@ def full():
                               percentage=100,
                               times=2)
         session.set_smart_hashtags(hashtag_categories,
-                                   limit=6,
+                                   limit=10,
                                    sort='top',
                                    log_tags=True)
         session.like_by_tags(amount=random.randint(50, 100),
@@ -141,12 +141,12 @@ def unfollow():
                                sleep_delay=600)
 
 
-full()
+# full()
 # unfollow()
 
-# schedule.every().day.at('8:00').do(full)
+schedule.every().day.at('8:00').do(full)
 # schedule.every().day.at('22:33').do(unfollow)
 
-# while True:
-#     schedule.run_pending()
-#     time.sleep(1)
+while True:
+    schedule.run_pending()
+    time.sleep(1)
