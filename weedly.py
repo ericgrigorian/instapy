@@ -103,12 +103,13 @@ def job():
                                style="FIFO",
                                unfollow_after=3 * 24 * 60 * 60,
                                sleep_delay=600)
+        session.end()
+
+# job()
 
 
-job()
+schedule.every().day.at('8:00').do(job)
 
-# schedule.every().day.at('8:00').do(job)
-#
-# while True:
-#     schedule.run_pending()
-#     time.sleep(1)
+while True:
+    schedule.run_pending()
+    time.sleep(1)

@@ -105,6 +105,7 @@ def full():
                                style="FIFO",
                                unfollow_after=3 * 24 * 60 * 60,
                                sleep_delay=600)
+        session.end()
 
 
 def unfollow():
@@ -139,10 +140,11 @@ def unfollow():
                                style="FIFO",
                                unfollow_after=4 * 24 * 60 * 60,
                                sleep_delay=600)
-
+        session.end()
 
 # full()
 # unfollow()
+
 
 schedule.every().day.at('8:00').do(full)
 # schedule.every().day.at('22:33').do(unfollow)
