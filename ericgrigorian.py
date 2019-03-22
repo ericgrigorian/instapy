@@ -25,10 +25,10 @@ dont_like_hastags = ['suicidal', 'suicide', 'depression', 'depressed', 'cutting'
                      'forex', 'crypto', 'binary', 'turkish', 'bitcoin', 'hustle']
 
 peak_daily_follows = 500
-peak_hourly_follows = 31
+peak_hourly_follows = 20
 
 peak_daily_likes = 2000
-peak_hourly_likes = 125
+peak_hourly_likes = 80
 
 # if year == 2018 and (day_of_year - start_day_of_year) * follow_multiplier + peak_daily_follows <= 500:
 #     peak_daily_follows += (day_of_year - start_day_of_year) * follow_multiplier

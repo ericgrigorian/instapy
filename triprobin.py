@@ -31,9 +31,9 @@ def full():
     peak_hourly_likes = 125
     if year == 2019 and (day_of_year - start_day_of_year) * follow_multiplier + peak_daily_follows <= 500:
         peak_daily_follows += (day_of_year - start_day_of_year) * follow_multiplier
-    peak_hourly_follows = int(peak_daily_follows / 16)
+    peak_hourly_follows = int(peak_daily_follows / 24)
     peak_daily_likes = int(peak_daily_follows * 4)
-    peak_hourly_likes = int(peak_daily_likes / 16)
+    peak_hourly_likes = int(peak_daily_likes / 24)
 
     # get an InstaPy session!
     # set headless_browser=True to run InstaPy in the background
