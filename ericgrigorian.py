@@ -138,7 +138,8 @@ def unfollow():
         session.unfollow_users(amount=int(peak_daily_follows),
                                InstapyFollowed=(True, "all"),
                                style="FIFO",
-                               unfollow_after=4 * 24 * 60 * 60,
+                               # unfollow_after=4 * 24 * 60 * 60,
+                               unfollow_after=1,
                                sleep_delay=600)
         session.end()
 
