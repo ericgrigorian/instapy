@@ -142,13 +142,14 @@ def unfollow():
                                sleep_delay=600)
         session.end()
 
+
 # full()
-# unfollow()
+unfollow()
 
 
-schedule.every().day.at('8:00').do(full)
+# schedule.every().day.at('8:00').do(full)
 # schedule.every().day.at('22:33').do(unfollow)
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+# while True:
+#     schedule.run_pending()
+#     time.sleep(1)
