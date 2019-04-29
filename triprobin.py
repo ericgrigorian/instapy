@@ -159,7 +159,7 @@ def unfollow():
 # unfollow()
 
 
-schedule.every().day.at('20:02').do(full)
+schedule.every().day.at('12:40').do(full)
 # schedule.every().day.at('22:33').do(unfollow)
 
 while True:
